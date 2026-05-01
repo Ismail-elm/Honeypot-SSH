@@ -1,6 +1,7 @@
 # 🛡️ SSH Honeypot
  
 A Python-based SSH honeypot that captures brute-force attempts and displays them in a real-time SOC dashboard.
+![Dashboard](assets/dashboard.png)
  
 ## Features
  

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Honeypot SOC Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <h1>🛡️ Honeypot SOC Dashboard</h1>
+    <p class="live">● LIVE monitoring</p>
+
+    <table>
+        <thead>
+            <h2>Login Attempts</h2>
+            <tr>
+                <th>IP</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Time</th>
+                <th>Country</th>
+                <th>City</th>
+            </tr>
+        </thead>
+
+        <tbody id="logs"></tbody>
+    </table>
+    <table>
+        <thead>
+            <h2>Brute-force Attempts</h2>
+            <tr>
+                <th>IP</th>
+                <th>Attempts</th>
+            </tr>
+        </thead>
+
+        <tbody id="bruteforce"></tbody>
+    </table>
+    <h2>Attack Map</h2>
+    <div id="map" style="height: 400px;"></div>
+    <div class="table-wrap">
+        <h2>Top Passwords</h2>
+        <canvas id="topPasswords"></canvas>
+    </div>
+</div>
+</body>
+</html>

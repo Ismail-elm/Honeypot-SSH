@@ -64,6 +64,7 @@ async function loadMap() {
 }
 
 loadMap();
+let topPasswordsChart = null;
 
 async function loadTopPasswords() {
     const res = await fetch("/api/top_passwords");
@@ -71,8 +72,9 @@ async function loadTopPasswords() {
 
     const labels = data.map(d => d.password);
     const values = data.map(d => d.attempts);
+    if (topPasswordsChart) topPasswordsChart.destroy();
 
-    new Chart(document.getElementById("topPasswords"), {
+    topPasswordsChart = new Chart(document.getElementById("topPasswords"), {
         type: 'bar',
         data: {
             labels: labels,
@@ -84,3 +86,45 @@ async function loadTopPasswords() {
     });
 }
 loadTopPasswords();
+setInterval(loadTopPasswords, 10000);
+
+let topCountriesChart = null;
+
+async function loadTopCountries() {
+    const res = await fetch("/api/top_countries");
+    const data = await res.json();
+
+    const labels = data.map(d => d.country);
+    const values = data.map(d => d.attempts);
+    if (topCountriesChart) topCountriesChart.destroy();
+
+    topCountriesChart = new Chart(document.getElementById("topCountries"), {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Attempts',
+                data: values,
+            }]
+        }
+    });
+}
+loadTopCountries();
+setInterval(loadTopCountries, 10000);
+
+async function loadStats() {
+    const res = await fetch("/api/stats");
+    const data = await res.json();
+
+    document.getElementById("totalAttempts").innerText = data.total_attempts;
+    document.getElementById("uniqueIPs").innerText = data.unique_ips;
+    document.getElementById("topCountry").innerText = data.unique_countries;
+    const last = new Date(data.latest_timestamp + "Z");
+    const diffMs = Date.now() - last.getTime();
+    const diffMin = Math.floor(diffMs / 60000);
+    const diffHr = Math.floor(diffMin / 60);
+    document.getElementById("latestTimestamp").innerText = diffMin < 1 ? "Just now" : diffHr < 1 ? `${diffMin} min ago` : `${diffHr} hr ago`;
+}
+
+loadStats();
+setInterval(loadStats, 2000);

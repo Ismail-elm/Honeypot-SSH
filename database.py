@@ -1,5 +1,7 @@
 import sqlite3
 import requests
+import threading
+db_lock = threading.Lock()
 
 def init_db():
     conn = sqlite3.connect('honeypot_ssh.db')
@@ -21,14 +23,15 @@ def init_db():
     conn.close()
 
 def log_auth_attempt(ip, username, password, country, city, lat=None, lon=None):
-    conn =sqlite3.connect('honeypot_ssh.db')
-    c = conn.cursor()
-    c.execute('''
-        INSERT INTO auth_attempts (ip, username, password, country, city, lat, lon)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        ''', (ip, username, password, country, city, lat, lon))
-    conn.commit()
-    conn.close()    
+    with db_lock:
+        conn =sqlite3.connect('honeypot_ssh.db')
+        c = conn.cursor()
+        c.execute('''
+            INSERT INTO auth_attempts (ip, username, password, country, city, lat, lon)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            ''', (ip, username, password, country, city, lat, lon))
+        conn.commit()
+        conn.close()    
 
 
 cache = {}

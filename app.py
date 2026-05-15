@@ -97,5 +97,49 @@ def api_top_passwords():
         })
     return jsonify(data)
 
+@app.route("/api/top_countries")
+def api_top_countries():
+    import sqlite3
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT country, COUNT(*) as attempts
+        FROM auth_attempts
+        GROUP BY country
+        ORDER BY attempts DESC
+        LIMIT 10
+    ''')
+    results = cursor.fetchall()
+    conn.close()
+    data = []
+    for row in results:
+        data.append({
+            "country": row[0],
+            "attempts": row[1]
+        })
+    return jsonify(data)
+
+@app.route("/api/stats")
+def api_stats():
+    import sqlite3
+    conn = sqlite3.connect(DB)
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM auth_attempts")
+    total_attempts = cursor.fetchone()[0]
+    cursor.execute("SELECT COUNT(DISTINCT ip) FROM auth_attempts")
+    unique_ips = cursor.fetchone()[0]
+    cursor.execute("SELECT COUNT(DISTINCT country) FROM auth_attempts")
+    unique_countries = cursor.fetchone()[0]
+    cursor.execute("SELECT timestamp FROM auth_attempts ORDER BY timestamp DESC LIMIT 1")
+    latest_timestamp = cursor.fetchone()[0] 
+    conn.close()
+    return jsonify({
+        "total_attempts": total_attempts,
+        "unique_ips": unique_ips,
+        "unique_countries": unique_countries,
+        "latest_timestamp": latest_timestamp
+    })
+
+
 if __name__ == "__main__":
     app.run(debug=True)

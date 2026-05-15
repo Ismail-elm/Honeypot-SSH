@@ -14,6 +14,24 @@
     <h1>🛡️ Honeypot SOC Dashboard</h1>
     <p class="live">● LIVE monitoring</p>
 
+    <div class="stats">
+        <div class="stat">
+            <h3>Total Login Attempts</h3>
+            <p id="totalAttempts">0</p>
+        </div>
+        <div class="stat">
+            <h3>Unique IPs</h3>
+            <p id="uniqueIPs">0</p>
+        </div>
+        <div class="stat">
+            <h3>Top Attack Country</h3>
+            <p id="topCountry">N/A</p>
+        </div>
+        <div class="stat">
+            <h3>Last Attack</h3>
+            <p id="latestTimestamp">N/A</p>
+        </div>
+    </div>
     <table>
         <thead>
             <h2>Login Attempts</h2>
@@ -43,8 +61,12 @@
     <h2>Attack Map</h2>
     <div id="map" style="height: 400px;"></div>
     <div class="table-wrap">
-        <h2>Top Passwords</h2>
+        <h2>Top 10 Passwords</h2>
         <canvas id="topPasswords"></canvas>
+    </div>
+    <div class="table-wrap">
+        <h2>Top 10 Countries</h2>
+        <canvas id="topCountries"></canvas>
     </div>
 </div>
 </body>
